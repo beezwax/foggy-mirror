@@ -38,6 +38,7 @@ Within Ruby:
 ```ruby
 require 'foggy-mirror'
 
+# All keyword arguments are optional, only the filename is required
 p = FoggyMirror::Processor.new("/path/to/image.jpg",
   resolution:      5,
   overlap:         0.5,
