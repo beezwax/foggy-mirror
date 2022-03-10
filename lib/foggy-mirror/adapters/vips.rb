@@ -1,5 +1,9 @@
 # frozen_string_literal: true
-require 'vips'
+begin
+  require 'vips'
+rescue LoadError
+  raise LoadError, "Couldn't load 'vips' library, do you have ruby-vips in your Gemfile?"
+end
 
 module FoggyMirror
   class Vips

@@ -4,7 +4,7 @@ module FoggyMirror
   class Processor
     attr_reader :image_path, :resolution, :overlap, :random_offset, :random
 
-    def initialize(image_path, resolution: DEFAULT_RESOLUTION, overlap: 0.5, distribution: :shuffle, random_offset: 0.5, random: Random.new, adapter: ImageMagick, adapter_options: {})
+    def initialize(image_path, resolution: DEFAULT_RESOLUTION, overlap: 0.5, distribution: nil, random_offset: 0.5, random: Random.new, adapter: default_adapter, adapter_options: {})
       @image_path = image_path
 
       @resolution = resolution
@@ -13,7 +13,7 @@ module FoggyMirror
       @random_offset = random_offset
 
       @random = random
-      @adapter = adapter.new(image_path, **adapter_options)
+      @adapter = resolve_adapter(adapter).new(image_path, **adapter_options)
     end
 
     def base_color
@@ -55,7 +55,7 @@ module FoggyMirror
         spiral_in(blobs)
       when 'spiral_out'
         spiral_in(blobs).reverse
-      when 'scan_up'
+      when 'scan_reverse'
         blobs.reverse
       else
         blobs
@@ -79,6 +79,23 @@ module FoggyMirror
       [].tap do |r|
         r.concat(peel.next.call) until matrix.empty?
       end
+    end
+
+    def default_adapter
+      require 'vips'
+      Vips
+    rescue LoadError
+      ImageMagick
+    end
+
+    def resolve_adapter(adapter)
+      if adapter.kind_of?(Symbol) || adapter.kind_of?(String)
+        return ADAPTERS.fetch(adapter.to_sym).call
+      end
+
+      return adapter if adapter.kind_of?(Class)
+
+      raise Error, "`adapter' must be an adapter class or an adapter name (#{ADAPTERS.keys.join(', ')})"
     end
   end
 end

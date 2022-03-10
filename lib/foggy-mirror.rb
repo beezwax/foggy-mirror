@@ -7,9 +7,15 @@ module FoggyMirror
 
   DEFAULT_RESOLUTION = 5
 
+  ADAPTERS = {
+    vips:   -> { FoggyMirror::Vips },
+    magick: -> { FoggyMirror::ImageMagick }
+  }.freeze
+
   Blob = Struct.new(:x, :y, :r, :color, keyword_init: true)
 
   autoload :Processor,   'foggy-mirror/processor'
+  autoload :CLI,         'foggy-mirror/cli'
   autoload :Utils,       'foggy-mirror/utils'
   autoload :ImageMagick, 'foggy-mirror/adapters/image_magick'
   autoload :Vips,        'foggy-mirror/adapters/vips'
