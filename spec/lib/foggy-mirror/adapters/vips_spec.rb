@@ -7,7 +7,7 @@ describe FoggyMirror::Vips do
   subject { described_class.new('img/unsplash-sq.webp') }
 
   describe "#dominant_color" do
-    it { expect(subject.dominant_color).to eq('#525557') }
+    it { expect(subject.dominant_color).to match(/\A#5[012]5[456]5[678]\Z/) }
   end
 
   describe "#color_samples" do
