@@ -39,7 +39,7 @@ gem 'foggy-mirror'
 
 ## Usage
 
-Within Ruby:
+### Within Ruby
 
 ```ruby
 require 'foggy-mirror'
@@ -79,3 +79,36 @@ Options are:
   Supported adapters are `FoggyMirror::ImageMagick` (uses CLI commands) and
   `FoggyMirror::Vips` (fastest, but requires installing `ruby-vips` gem).
 * `adapter_options` (Hash): options to pass to the adapter on initialization.
+
+### From CLI
+
+```
+$ foggy-mirror [options] [--] image_file ... 
+```
+
+For a full list of options use `-h`:
+
+```
+$ foggy-mirror -h
+Usage: foggy-mirror [options] [--] image_file ...
+        --res=RESOLUTION             The output resolution (how many radial gradients per dimension)
+        --overlap=OVERLAP            How much to overlap radial gradients
+        --dist=DISTRIBUTION          Distribution strategy for radial gradients
+        --random-offset=OFFSET       Upper limit for how much to randomly offset each radial gradient
+        --random-seed=SEED           The random seed to use (for deterministic results)
+        --adapter=ADAPTER            Which graphics library adapter to use
+        --extension=EXTENSION        The extension to use for created files (default: .foggy.svg)
+        --stdout                     Output to STDOUT instead of writing to files
+        --target-dir=DIR             Directory to write files to (defaults to same as input files)
+    -h, --help                       Print help
+        --version                    Show version
+```
+
+Simple example:
+
+```
+$ foggy-mirror some_image.jpg some_other_image.webp yet_another_one.gif
+```
+
+The above will create files `some_image.foggy.svg`,
+`some_other_image.foggy.svg` and `yet_another_one.foggy.svg`.
