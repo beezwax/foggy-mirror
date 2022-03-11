@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "ruby-vips", "~> 2.1"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.1"
   spec.add_development_dependency "nokogiri"
   spec.add_development_dependency "pry-byebug"
