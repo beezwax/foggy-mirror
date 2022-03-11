@@ -38,7 +38,7 @@ module FoggyMirror
         OptionParser.new do |opts|
           opts.banner = 'Usage: foggy-mirror [options] [--] image_file ...'
 
-          opts.on('--res=RESOLUTION', Integer, 'The output resolution (how many radial gradients per dimension)') do |r|
+          opts.on('--res=RESOLUTION', Integer, "The output resolution (how many radial gradients per dimension, default: #{DEFAULT_RESOLUTION})") do |r|
             @options[:resolution] = r
           end
 

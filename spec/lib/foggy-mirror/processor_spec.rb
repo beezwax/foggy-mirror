@@ -43,7 +43,7 @@ describe FoggyMirror::Processor do
       allow(instance).to receive(:adapter).and_return(dummy_adapter)
     end
 
-    it { expect(instance.color_samples(2)).to eq(samples_2x2) }
+    it { expect(instance.color_samples).to eq(samples_2x2) }
   end
 
   describe "#blobs" do
