@@ -1,16 +1,26 @@
-name: Ruby
+name: CI
 
-on: [push,pull_request]
+on: [push, pull_request]
 
 jobs:
-  build:
+  specs:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: [2.7, '3.0', 3.1]
+
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
+    - name: Install ImageMagick
+      run: sudo apt install imagemagick 
+    - name: Install libvips
+      run: sudo apt install libvips42
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1.0
+        ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - name: Run the default task
-      run: bundle exec rake
+    - name: Run specs
+      run: bundle exec rspec spec --backtrace
