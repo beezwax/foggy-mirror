@@ -13,10 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install ImageMagick
-      run: sudo apt install imagemagick 
-    - name: Install libvips
-      run: sudo apt install libvips42
+    - name: Install ImageMagick and libvips
+      run: sudo apt install imagemagick libvips42
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
