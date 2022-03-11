@@ -10,8 +10,10 @@ module FoggyMirror
         }
       end
 
-      render(hash: true).map { |k, v| "#{k}: #{v}" }.join(';') + ';'
+      render(hash: true).map { |k, v| "#{k}: #{v}" }.join(";\n") + ';'
     end
+
+    private
 
     def radial_gradients
       blobs.map do |b|

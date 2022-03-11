@@ -2,7 +2,7 @@
 
 module FoggyMirror
   class Processor
-    attr_reader :image_path, :resolution, :overlap, :random_offset, :random
+    attr_reader :image_path, :resolution, :overlap, :random_offset, :random, :adapter
 
     def initialize(image_path, resolution: DEFAULT_RESOLUTION, overlap: 0.5, distribution: nil, random_offset: 0.5, random: Random.new, adapter: default_adapter, adapter_options: {})
       @image_path = image_path
@@ -17,11 +17,11 @@ module FoggyMirror
     end
 
     def base_color
-      @base_color ||= @adapter.dominant_color
+      @base_color ||= adapter.dominant_color
     end
 
     def color_samples(res)
-      @color_samples ||= @adapter.color_samples(res)
+      @color_samples ||= adapter.color_samples(res)
     end
 
     def to_css(hash: false)
