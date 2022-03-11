@@ -82,6 +82,8 @@ Options are:
 
 ### From CLI
 
+Command syntax:
+
 ```
 $ foggy-mirror [options] [--] image_file ... 
 ```
