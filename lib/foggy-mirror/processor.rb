@@ -20,8 +20,8 @@ module FoggyMirror
       @base_color ||= adapter.dominant_color
     end
 
-    def color_samples(res)
-      @color_samples ||= adapter.color_samples(res)
+    def color_samples
+      @color_samples ||= adapter.color_samples(resolution)
     end
 
     def to_css(hash: false)
@@ -33,7 +33,7 @@ module FoggyMirror
     end
 
     def blobs
-      samples = color_samples(resolution)
+      samples = color_samples
 
       increment = 1.0 / (resolution - 1)
 
