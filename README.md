@@ -1,5 +1,6 @@
 # foggy-mirror
 
+[![Gem Version](https://badge.fury.io/rb/foggy-mirror.svg?style=flat)](https://rubygems.org/gems/foggy-mirror)
 ![CI](https://github.com/beezwax/foggy-mirror/workflows/CI/badge.svg)
 
 foggy-mirror is a small Ruby tool that creates faux blurry versions of raster
