@@ -1,5 +1,7 @@
 # foggy-mirror
 
+![CI](https://github.com/beezwax/foggy-mirror/workflows/CI/badge.svg)
+
 foggy-mirror is a small Ruby tool that creates faux blurry versions of raster
 images using radial gradients, exported as either SVG or CSS (using
 `background-image`).
