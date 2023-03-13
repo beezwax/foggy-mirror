@@ -5,20 +5,41 @@ rescue LoadError
   raise LoadError, "Couldn't load 'vips' library, do you have ruby-vips in your Gemfile?"
 end
 
+require 'base64'
+
 module FoggyMirror
   class Vips
-    include Utils
-
     def initialize(path)
       @path = path
     end
 
     def dominant_color
-      html_color *color_avg(load_image(DEFAULT_RESOLUTION))
+      color_avg(load_image(DEFAULT_RESOLUTION))
     end
 
     def color_samples(res)
-      square_image(res).to_a.flatten(1).map { |rgb| html_color *rgb }
+      square_image(res).to_a.flatten(1)
+    end
+
+    # format and options are passed to Vips' #write_to_buffer.
+    #
+    # We use .gif as the default format as it's by far the most size-efficient
+    # format for very small images. E.g. a 5x5 GIF is around 171 bytes, while
+    # an equivalent PNG would be around 2780 bytes, and JPEG would be larger
+    # still.
+    #
+    def data_uri(res, format: '.gif', options: {})
+      image_type = if format.downcase.match?(/\.jpe?g/)
+                     'jpeg'
+                   else
+                     format.downcase.match(/\.(png|gif)/)[1]
+                   end
+
+      raise(ArgumentError, 'Unsupported image format') unless image_type
+
+      base64 = Base64.strict_encode64(square_image(res).write_to_buffer(format, **options)).chomp
+
+      "data:image/#{image_type};base64,#{base64}"
     end
 
     private

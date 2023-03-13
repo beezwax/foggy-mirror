@@ -8,12 +8,28 @@ module FoggyMirror
 
     VIEWBOX_SIZE = 1000
 
-    def render
+    STRATEGIES = %i[embedded_image gradients]
+
+    def render(strategy: STRATEGIES.first)
+      strategy = STRATEGIES.first if strategy.nil?
+
+      unless STRATEGIES.include?(strategy.to_sym)
+        raise ArgumentError, "Invalid SVG rendering strategy `#{strategy}'"
+      end
+
+      send("render_#{strategy}")
+    end
+
+    def render_gradients
       "#{header}<defs>#{radial_gradients.join}</defs>#{circles.join}</svg>"
     end
 
+    def render_embedded_image
+      "#{header}#{blur_filter}#{embedded_image}</svg>"
+    end
+
     def header
-      %{#{XML_HEADER}<svg viewBox="0 0 #{VIEWBOX_SIZE} #{VIEWBOX_SIZE}" xmlns="http://www.w3.org/2000/svg" version="1.1" style="background-color:#{base_color}">}
+      %{#{XML_HEADER}<svg width="#{VIEWBOX_SIZE}" height="#{VIEWBOX_SIZE}" preserveAspectRatio="none" viewBox="0 0 #{VIEWBOX_SIZE} #{VIEWBOX_SIZE}" xmlns="http://www.w3.org/2000/svg" version="1.1" style="background-color:#{base_color}">}
     end
 
     def radial_gradients
@@ -36,6 +52,23 @@ module FoggyMirror
           id = String.new(ID_START)
           Hash[blobs.map(&:color).uniq.map { |c| [c, id.dup].tap { id.succ! } }]
         end
+    end
+
+    private
+
+    def blur_filter
+      <<~FILTER.lines.map(&:strip).join
+        <filter id="b" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="30"/>
+          <feComponentTransfer>
+            <feFuncA type="discrete" tableValues="1 1"/>
+          </feComponentTransfer>
+        </filter>
+      FILTER
+    end
+
+    def embedded_image
+      %{<image href="#{data_uri}" width="#{VIEWBOX_SIZE}" height="#{VIEWBOX_SIZE}" filter="url(#b)"/>}
     end
   end
 end

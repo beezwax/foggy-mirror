@@ -5,6 +5,10 @@ module FoggyMirror
   class CLI
     DEFAULT_EXTENSION = '.foggy.svg'
 
+    DEFAULT_FORMAT = :svg
+
+    FORMATS = %i[svg css]
+
     def initialize(args = ARGV)
       @args = args.dup
     end
@@ -12,6 +16,8 @@ module FoggyMirror
     def run
       @options = {}
       @extension = DEFAULT_EXTENSION
+      @format = DEFAULT_FORMAT
+      @strategy = SVG::STRATEGIES.first
       @stdout = false
       @target_dir = nil
 
@@ -22,11 +28,19 @@ module FoggyMirror
       @args.each do |path|
         p = Processor.new(path, **@options)
 
-        unless @stdout
-          foggy_file = File.join(@target_dir || File.dirname(path), File.basename(path, '.*') + @extension)
-          IO.write(foggy_file, p.to_svg)
+        output = case @format
+                 when :svg
+                   p.to_svg(strategy: @strategy)
+                 when :css
+                   @stdout = true
+                   p.to_css
+                 end
+
+        if @stdout
+          puts output
         else
-          puts p.to_svg
+          foggy_file = File.join(@target_dir || File.dirname(path), File.basename(path, '.*') + @extension)
+          IO.write(foggy_file, output)
         end
       end
     end
@@ -38,6 +52,14 @@ module FoggyMirror
         OptionParser.new do |opts|
           opts.banner = 'Usage: foggy-mirror [options] [--] image_file ...'
 
+          opts.on('--format=FORMAT', FORMATS, "Which format output to generate, default: #{DEFAULT_FORMAT}") do |f|
+            @format = f
+          end
+
+          opts.on('--strategy=STRATEGY', SVG::STRATEGIES, "Which strategy to use for SVG output, default: #{SVG::STRATEGIES.first}") do |s|
+            @strategy = s
+          end
+
           opts.on('--res=RESOLUTION', Integer, "The output resolution (how many radial gradients per dimension, default: #{DEFAULT_RESOLUTION})") do |r|
             @options[:resolution] = r
           end
@@ -46,7 +68,7 @@ module FoggyMirror
             @options[:overlap] = o
           end
 
-          opts.on('--dist=DISTRIBUTION', %w[shuffle spiral_in spiral_out scan scan_reverse], 'Distribution strategy for radial gradients') do |d|
+          opts.on('--dist=DISTRIBUTION', %w[shuffle spiral_in spiral_out scan scan_reverse brightness brightness_reverse], 'Distribution strategy for radial gradients') do |d|
             @options[:distribution] = d.to_s
           end
 

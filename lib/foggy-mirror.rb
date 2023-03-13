@@ -12,9 +12,9 @@ module FoggyMirror
     magick: -> { FoggyMirror::ImageMagick }
   }.freeze
 
-  Blob = Struct.new(:x, :y, :r, :color, keyword_init: true)
-
   autoload :Processor,   'foggy-mirror/processor'
+  autoload :Color,       'foggy-mirror/color'
+  autoload :Blob,        'foggy-mirror/blob'
   autoload :CLI,         'foggy-mirror/cli'
   autoload :Utils,       'foggy-mirror/utils'
   autoload :ImageMagick, 'foggy-mirror/adapters/image_magick'

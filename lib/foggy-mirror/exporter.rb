@@ -6,14 +6,14 @@ module FoggyMirror
   class Exporter
     extend Forwardable
 
-    def_delegators :@processor, :base_color, :resolution, :blobs
+    def_delegators :@processor, :base_color, :resolution, :blobs, :data_uri
 
     def initialize(processor)
       @processor = processor
     end
 
     def render
-      raise NotImplementedError
+      raise NoMethodError
     end
   end
 end

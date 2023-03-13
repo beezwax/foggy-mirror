@@ -17,18 +17,14 @@ module FoggyMirror
     end
 
     def base_color
-      @base_color ||= adapter.dominant_color
-    end
-
-    def color_samples
-      @color_samples ||= adapter.color_samples(resolution)
+      @base_color ||= Color.new(adapter.dominant_color)
     end
 
     def to_css(hash: false)
       CSS.new(self).render(hash: hash)
     end
 
-    def to_svg
+    def to_svg(strategy: nil)
       SVG.new(self).render
     end
 
@@ -57,29 +53,24 @@ module FoggyMirror
         spiral_in(blobs).reverse
       when 'scan_reverse'
         blobs.reverse
+      when 'brightness'
+        blobs.sort_by { |b| b.color.brightness }
+      when 'brightness_reverse'
+        blobs.sort_by { |b| 255 - b.color.brightness }
       else
         blobs
       end
     end
 
-    private
-
-    def spiral_in(array)
-      matrix = array.each_slice(Math.sqrt(array.size).to_i).to_a
-
-      actions = [
-        -> { matrix.shift                       }, # top
-        -> { matrix.map { |f| f.pop }           }, # right
-        -> { matrix.pop.reverse                 }, # bottom
-        -> { matrix.map { |f| f.shift }.reverse }  # left
-      ]
-
-      peel = actions.cycle
-
-      [].tap do |r|
-        r.concat(peel.next.call) until matrix.empty?
-      end
+    def data_uri
+      @data_uri ||= adapter.data_uri(resolution)
     end
+
+    def color_samples
+      @color_samples ||= adapter.color_samples(resolution)
+    end
+
+    private
 
     def default_adapter
       require 'vips'
@@ -96,6 +87,23 @@ module FoggyMirror
       return adapter if adapter.kind_of?(Class)
 
       raise Error, "`adapter' must be an adapter class or an adapter name (#{ADAPTERS.keys.join(', ')})"
+    end
+
+    def spiral_in(array)
+      matrix = array.each_slice(Math.sqrt(array.size).to_i).to_a
+
+      actions = [
+        -> { matrix.shift                       }, # top
+        -> { matrix.map { |f| f.pop }           }, # right
+        -> { matrix.pop.reverse                 }, # bottom
+        -> { matrix.map { |f| f.shift }.reverse }  # left
+      ]
+
+      peel = actions.cycle
+
+      [].tap do |r|
+        r.concat(peel.next.call) until matrix.empty?
+      end
     end
   end
 end

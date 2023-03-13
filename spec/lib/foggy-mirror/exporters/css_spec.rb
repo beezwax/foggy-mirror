@@ -17,14 +17,17 @@ describe FoggyMirror::CSS do
 
   describe "#render" do
     context 'when requesting a string' do
-      it { expect(subject.render).to match(/background-color: #000000;\nbackground-image: (?:radial-gradient\(circle at \d+% \d+%, #[0-9A-F]{6} 0%, #[0-9A-F]{8} \d+%\)(?:, )?){4};/) }
+      it do
+        expect(subject.render).to \
+          match(/background-color: #000000;\nbackground-image: (?:radial-gradient\(circle at \d+% \d+%, #[0-9A-F]{3,6} 0%, #[0-9A-F]{8} \d+%\)(?:, )?){4};/)
+      end
     end
 
     context 'when requesting a hash' do
       it {
         expect(subject.render(hash: true)).to match(
           'background-color' => '#000000',
-          'background-image' => /(?:radial-gradient\(circle at \d+% \d+%, #[0-9A-F]{6} 0%, #[0-9A-F]{8} \d+%\)(?:, )?){4}/
+          'background-image' => /(?:radial-gradient\(circle at \d+% \d+%, #[0-9A-F]{3,6} 0%, #[0-9A-F]{8} \d+%\)(?:, )?){4}/
         )
       }
     end

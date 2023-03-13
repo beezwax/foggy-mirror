@@ -31,7 +31,7 @@ describe FoggyMirror::Processor do
       allow(instance).to receive(:adapter).and_return(dummy_adapter)
     end
 
-    it { expect(instance.base_color).to eq('#FFFFFF') }
+    it { expect(instance.base_color.to_s).to match(/#FFF(?:FFF)?/) }
   end
 
   describe "#color_samples" do
@@ -43,7 +43,7 @@ describe FoggyMirror::Processor do
       allow(instance).to receive(:adapter).and_return(dummy_adapter)
     end
 
-    it { expect(instance.color_samples).to eq(samples_2x2) }
+    it { expect(instance.color_samples.map(&:to_s)).to eq(samples_2x2) }
   end
 
   describe "#blobs" do
