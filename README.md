@@ -17,17 +17,17 @@ Need Ruby/Rails consulting? Contact us at [Beezwax.net](https://beezwax.net/)
 
 ## Example
 
-Original raster image:
+Original raster image (20KB WebP):
 
 ![Photo by Marek Piwnicki (@marekpiwnicki) / Unsplash](/img/unsplash-sq.webp)
 
-SVG with blur filter:
-
-<img src="/img/unsplash.gradients.svg" alt="foggy-mirror SVG using gradients" width="500" height="500" />
-
-SVG with radial gradients:
+SVG with blur filter (720 bytes SVG):
 
 <img src="/img/unsplash.filter.svg" alt="foggy-mirror SVG using blur filter" width="500" height="500" />
+
+Radial gradients (4.8KB SVG or 1.7KB pure CSS):
+
+<img src="/img/unsplash.gradients.svg" alt="foggy-mirror SVG using gradients" width="500" height="500" />
 
 ## Installation
 
