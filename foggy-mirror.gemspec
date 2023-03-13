@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Pedro Carbajal"]
   spec.email         = ["pedro_c@beezwax.net"]
 
-  spec.summary       = "Tool to create gradient-based blurred versions of raster images"
-  spec.description   = "foggy-mirror takes a raster image and outputs a blurred version of it using CSS or SVG radial-gradients"
+  spec.summary       = "Tool to create math-based tiny blurry versions of raster images"
+  spec.description   = "foggy-mirror takes a raster image and outputs a blurred version of it using SVG or CSS"
   spec.homepage      = "https://github.com/beezwax/foggy-mirror"
   spec.required_ruby_version = ">= 2.4.0"
 
