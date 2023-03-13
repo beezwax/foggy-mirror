@@ -5,17 +5,13 @@
 [![Powered by Beezwax](https://img.shields.io/badge/Powered%20By-Beezwax-gold?logo=data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTA5IiBoZWlnaHQ9IjEwOSIgdmlld0JveD0iMCAwIDEwOSAxMDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQogICA8Zz4NCiAgICAgIDxwYXRoIGQ9Ik01MC44IDEwNi42MjVDNTkuMSA5OS4zMjUgNjEuOSA5MS42MjUgNjEuOSA5MS42MjVDNjMuMiA4Ny43MjUgNjQuNyA4NC41MjUgNjQuNyA2OS4zMjVDNjQuNyA0Ni40MjUgNTYuMiAzOC45MjUgNDcgMzIuMDI1QzQwLjggMjcuMzI1IDI0LjkgMjEuMTI1IDE1LjUgMTcuNjI1TDIuMjk5OTggMjUuMTI1QzEuNDk5OTggMjUuNzI1IDAuOTk5OTc2IDI2LjIyNSAwLjU5OTk3NiAyNi44MjVDMjQuNCAzMi4xMjUgNDEuNSA0OC4wMjUgNDEuNSA2Ni44MjVDNDEuNSA3OC4yMjUgMzUuMSA4OC42MjUgMjQuOSA5Ni4xMjVMNDQuNyAxMDcuNTI1QzQ1LjEgMTA3LjcyNSA0NiAxMDguMTI1IDQ3LjMgMTA4LjEyNUM0Ny45IDEwOC4xMjUgNDkgMTA3LjkyNSA1MC4zIDEwNi44MjVMNTAuOCAxMDYuNjI1WiIgZmlsbD0iI0ZGRDkzOSI+PC9wYXRoPg0KICAgICAgPHBhdGggZD0iTTIyLjkgMTMuMzI0OEw0NCAyMC40MjQ4QzY0LjYgMjcuNzI0OCA3My4yIDM3LjgyNDggNzMuMiAzNy44MjQ4Qzg0LjUgNDkuMTI0OCA4My4yIDYxLjYyNDggODMuMiA3Ni44MjQ4QzgzLjIgODAuNjI0OCA4Mi42IDg0LjkyNDggODEuNyA4OS4wMjQ4TDkzIDgyLjYyNDhDOTUuNiA4MS4xMjQ4IDk1LjYgNzcuOTI0OCA5NS42IDc3LjkyNDhWMjkuMzI0OEM5NS42IDI2LjEyNDggOTMgMjQuNjI0OCA5MyAyNC42MjQ4TDcyLjUgMTMuMjI0OEw1MC42IDAuNjI0ODQ1QzQ4LjEgLTAuNjc1MTU1IDQ1LjUgMC40MjQ4NDUgNDUuMyAwLjYyNDg0NUwyMy4xIDEzLjMyNDhIMjIuOVoiIGZpbGw9IiNGRkQ5MzkiPjwvcGF0aD4NCiAgICAgIDxwYXRoIGQ9Ik0wLjEgMzEuNTI0NFY3OC4yMjQ0QzAuMSA4MC44MjQ0IDIuMiA4Mi4zMjQ0IDIuNyA4Mi43MjQ0TDE0LjggODkuNjI0NEwxNy44IDkxLjMyNDRDMjQuNCA4NC43MjQ0IDI4LjQgNzYuMzI0NCAyOC41IDY3LjEyNDRDMjguNSA1MS41MjQ0IDE2LjggMzguMDI0NCAwIDMxLjUyNDRIMC4xWiIgZmlsbD0iI0ZGRDkzOSI+PC9wYXRoPg0KICAgPC9nPg0KPC9zdmc+)](https://beezwax.net/)
 
 foggy-mirror is a small Ruby tool that creates faux blurry versions of raster
-images using radial gradients, exported as either SVG or CSS (using
-`background-image`).
+images using SVG or CSS, either through radial gradients or SVG blur filters,
+with very minimal file sizes (usually under 1KB).
 
 This is useful as a poor man's replacement for CSS's `backdrop-filter: blur()`,
 as that CSS feature isn't fully supported by browsers, and sometimes you want
-an element with a "frosted glass" effect on top of a crispy background.
-
-Using gradients we can achieve very smooth and infinitely scalable graphics at
-very low file size (e.g. the example SVG below is only 814 bytes after gzip).
-If you need a less blurry version of the original picture, then a regular blur
-effect saved to JPEG/WebP may be a better value proposition.
+an element with a "frosted glass" effect (also known as glassmorphism) on top
+of a crispy background.
 
 Need Ruby/Rails consulting? Contact us at [Beezwax.net](https://beezwax.net/)
 
@@ -25,9 +21,13 @@ Original raster image:
 
 ![Photo by Marek Piwnicki (@marekpiwnicki) / Unsplash](/img/unsplash-sq.webp)
 
-SVG:
+SVG with blur filter:
 
-<img src="/img/unsplash.svg" alt="foggy-mirror SVG" width="500" height="500" />
+<img src="/img/unsplash.gradients.svg" alt="foggy-mirror SVG using gradients" width="500" height="500" />
+
+SVG with radial gradients:
+
+<img src="/img/unsplash.filter.svg" alt="foggy-mirror SVG using blur filter" width="500" height="500" />
 
 ## Installation
 
@@ -93,7 +93,9 @@ For a full list of options use `-h`:
 ```
 $ foggy-mirror -h
 Usage: foggy-mirror [options] [--] image_file ...
-        --res=RESOLUTION             The output resolution (how many radial gradients per dimension)
+        --format=FORMAT              Which format output to generate, default: svg
+        --strategy=STRATEGY          Which strategy to use for SVG output, default: embedded_image
+        --res=RESOLUTION             The output resolution (how many radial gradients per dimension, default: 5)
         --overlap=OVERLAP            How much to overlap radial gradients
         --dist=DISTRIBUTION          Distribution strategy for radial gradients
         --random-offset=OFFSET       Upper limit for how much to randomly offset each radial gradient
