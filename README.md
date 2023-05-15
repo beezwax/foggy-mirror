@@ -6,7 +6,7 @@
 
 foggy-mirror is a small Ruby tool that creates faux blurry versions of raster
 images using SVG or CSS, either through radial gradients or SVG blur filters,
-with very minimal file sizes (usually under 1KB).
+with very small file sizes (usually under 1KB).
 
 This is useful as a poor man's replacement for CSS's `backdrop-filter: blur()`,
 as that CSS feature isn't fully supported by browsers, and sometimes you want
@@ -116,3 +116,12 @@ $ foggy-mirror some_image.jpg some_other_image.webp yet_another_one.gif
 
 The above will create files `some_image.foggy.svg`,
 `some_other_image.foggy.svg` and `yet_another_one.foggy.svg`.
+
+## Alternative tools
+
+You may also want to look at these other tools. Although their motivation is
+different (mostly meant for small placeholder thumbnails), they accomplish
+similar end results:
+
+* [ThumbHash](https://evanw.github.io/thumbhash/)
+* [BlurHash](https://blurha.sh/)
